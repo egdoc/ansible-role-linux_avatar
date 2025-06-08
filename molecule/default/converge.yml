@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  roles:
+    - role: egdoc.linux_avatar
+      linux_avatar_users:
+        - url: https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png
+          username: octocat

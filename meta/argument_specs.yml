@@ -1,0 +1,22 @@
+---
+argument_specs:
+  main:
+    author: Egidio Docile
+    options:
+      linux_avatar_users:
+        type: list
+        elements: dict
+        default: []
+        options:
+          url:
+            type: str
+            required: true
+          username:
+            type: str
+            required: true
+      linux_avatar_icon_dir:
+        type: str
+        default: /var/lib/AccountsService/icons
+      linux_avatar_user_dir:
+        type: str
+        default: /var/lib/AccountsService/users

@@ -1,0 +1,51 @@
+---
+- name: Ensure accountsservice is installed
+  ansible.builtin.package:
+    name: accountsservice
+    state: present
+
+- name: Ensure icons directory exists
+  ansible.builtin.file:
+    path: '{{ linux_avatar_icon_dir }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0775'
+
+- name: Ensure users directory exists
+  ansible.builtin.file:
+    path: '{{ linux_avatar_user_dir }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Download user icon
+  ansible.builtin.get_url:
+    url: '{{ item.url }}'
+    dest: '{{ linux_avatar_icon_dir }}/{{ item.username }}'
+    owner: root
+    group: root
+    mode: '0644'
+  loop: '{{ linux_avatar_users }}'
+  notify: Restart accounts-daemon service
+
+- name: Ensure user configuration is written
+  community.general.ini_file:
+    path: '{{ linux_avatar_user_dir }}/{{ item.username }}'
+    section: User
+    option: Icon
+    value: '{{ linux_avatar_icon_dir }}/{{ item.username }}'
+    no_extra_spaces: true
+    state: present
+    owner: root
+    group: root
+    mode: '0600'
+  loop: '{{ linux_avatar_users }}'
+  notify: Restart accounts-daemon service
+
+- name: Ensure accounts-daemon service is started and enabled
+  ansible.builtin.systemd_service:
+    name: accounts-daemon
+    state: started
+    enabled: true

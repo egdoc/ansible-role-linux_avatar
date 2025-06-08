@@ -1,0 +1,10 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure octocat user exists
+      ansible.builtin.user:
+        name: octocat
+        system: false
+        state: present
